@@ -1,0 +1,20 @@
+Info: Starter Node BE with authentication already implemented.
+- Name on github:
+
+Features:
+- register user
+- login user
+- get verification code (by email)
+
+Setup:
+1. create .env file with:
+JWT_TOKEN_SECRET=
+MONGO_DB_URI=
+DEV_CLIENT_APP_URL=http://localhost:3000
+PROD_CLIENT_APP_URL=
+
+
+Other:
+- mongo atlas account - saasdev email -frempongan....gmail.com
+- in utils.auth.js => change emails accordingly. If using yahoo mail, can create a password to
+for nodemailer transporter in yahoo mail security settings.
