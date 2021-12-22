@@ -1,6 +1,15 @@
 import mongoose from "mongoose";
 
 const ProductSchema = new mongoose.Schema({
+  // different from "_id". used to fetch single product
+  id: {
+    type: String,
+    required: true,
+  },
+  slug: {
+    type: String,
+    required: true,
+  },
   title: {
     type: String,
     required: true,

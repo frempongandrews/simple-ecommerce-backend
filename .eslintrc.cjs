@@ -23,5 +23,7 @@ module.exports = {
     "import/no-mutable-exports": "off",
     "max-len": "off",
     "consistent-return": "warn",
+    "arrow-body-style": "warn",
+    "semi": "warn",
   },
 };

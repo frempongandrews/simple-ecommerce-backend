@@ -4,13 +4,16 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import slugify from "slugify";
+import ShortUniqueId from "short-unique-id";
 import nodemailer from "nodemailer";
 import User from "./models/User.js";
 import Product from "./models/Product.js";
-import { products } from "./utils/index.js";
+import { createSlug, generateUniqueId, products } from "./utils/index.js";
 
 // routes
 import authRoutes from "./routes/auth.routes.js";
+import productRoutes from "./routes/product.routes.js";
 import { checkAuth } from "./middlewares/checkAuth.js";
 
 // env variables
@@ -29,14 +32,13 @@ mongoose.connect(process.env.MONGO_DB_URI)
     //   password: "123456",
     // });
     // await newUser.save();
-    //
-    // const newHouse = new House({
-    //   address: "manchester",
-    // });
-    // await newHouse.save();
+    
+    // todo: seed products
     // await Product.deleteMany({});
     // products.map(async (product) => {
     //   const newProduct = new Product({
+    //     id: generateUniqueId(),
+    //     slug: createSlug(product.title),
     //     title: product.title,
     //     price: product.price,
     //     shortDescription: product.shortDescription,
@@ -87,19 +89,8 @@ app.get("/", (req, res) => {
 
 // authRoutes
 app.use("/api/v1", authRoutes);
-
-app.get("/api/v1/products", async (req, res) => {
-  try {
-    const foundProducts = await Product.find({});
-    return res.json({
-      products: foundProducts,
-    });
-  } catch (err) {
-    return res.status(400).json({
-      message: "Error while fetching products",
-    });
-  }
-});
+// productRoutes
+app.use("/api/v1", productRoutes);
 
 app.listen(PORT, () => {
   console.log("********App started on port", PORT);

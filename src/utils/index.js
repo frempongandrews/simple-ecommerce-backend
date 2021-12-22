@@ -1,3 +1,6 @@
+import slugify from "slugify";
+import ShortUniqueId from "short-unique-id";
+
 export const products = [
   {
     title: "Steve Madden Bbrita quilted chain handle shoulder bag in taupe",
@@ -121,3 +124,19 @@ export const products = [
     ],
   },
 ];
+
+export const createSlug = (text) => {
+  const lowerCaseText = text.toLowerCase();
+  return slugify(lowerCaseText, {
+    remove: /[*+~.()'"!:@]/g,
+    replacement: "-",
+    lower: false,
+    strict: false,
+    trim: true,
+  });
+};
+
+export const generateUniqueId = () => {
+  const uidFunc = new ShortUniqueId({ length: 10 });
+  return uidFunc();
+};
