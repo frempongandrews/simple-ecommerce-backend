@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import keys from "../config/keys/keys.js";
+import Product from "./Product.js";
 
 const UserSchema = new mongoose.Schema({
   username: {
@@ -31,6 +32,11 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  cart: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Product",
+    default: [],
+  },
 });
 
 // sets "createdAt" and "updatedAt" fields
@@ -51,6 +57,7 @@ UserSchema.methods.getUserSummary = function () {
     email: this.email,
     isVerified: this.isVerified,
     image: this.image,
+    cart: this.cart,
   };
 };
 
