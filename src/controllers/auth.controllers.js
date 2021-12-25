@@ -62,7 +62,7 @@ export const registerUser = async (req, res) => {
         const user = await newUser.save();
         //
         return res.status(200).json({
-          message: "User successfully registered - please verify your email",
+          message: "User successfully registered - please check your email to verify your email",
           user: user.getUserSummary(),
         });
       }

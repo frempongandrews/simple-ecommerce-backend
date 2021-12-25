@@ -24,7 +24,7 @@ export const sendEmailUponRegistration = async ({
   try {
     const clientAppUrl = process.env.NODE_ENV === "development" ? process.env.DEV_CLIENT_APP_URL : process.env.PROD_CLIENT_APP_URL;
     const verificationCode = code || generateVerificationCode();
-    const clientAppVerificationEmailLink = `${clientAppUrl}/verify-email`;
+    const clientAppVerificationEmailLink = `${clientAppUrl}/verify-email?code=${verificationCode}&email=${to}`;
     // send mail with defined transport object
     const info = await transporter.sendMail({
       // sender address
