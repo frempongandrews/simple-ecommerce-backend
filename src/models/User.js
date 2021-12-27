@@ -32,11 +32,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  cart: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Product",
-    default: [],
-  },
 });
 
 // sets "createdAt" and "updatedAt" fields
@@ -57,7 +52,6 @@ UserSchema.methods.getUserSummary = function () {
     email: this.email,
     isVerified: this.isVerified,
     image: this.image,
-    cart: this.cart,
   };
 };
 
