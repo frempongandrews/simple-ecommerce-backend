@@ -223,7 +223,7 @@ export const loginUser = async (req, res) => {
       });
     }
     return res.status(400).json({
-      message: "Email not registered",
+      email: "Email not registered",
     });
   } catch (err) {
     return res.status(400).json({
