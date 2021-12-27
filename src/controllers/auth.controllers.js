@@ -235,7 +235,7 @@ export const loginUser = async (req, res) => {
 export const logoutUser = (req, res) => {
   res.clearCookie(keys.cookie.cookieName);
   return res.json({
-    message: "Successfully logout",
+    message: "Successful logout",
   });
 };
 
