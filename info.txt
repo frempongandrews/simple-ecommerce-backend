@@ -18,3 +18,17 @@ Other:
 - mongo atlas account - saasdev email -frempongan....gmail.com
 - in utils.auth.js => change emails accordingly. If using yahoo mail, can create a password to
 for nodemailer transporter in yahoo mail security settings.
+
+
+todo: test order
+[x] create NonRegisteredUser model
+[x] create order model
+[x] check if checkout is created by logged in user or not
+[x] add images to stripe checkout
+[x] load images on checkout page
+[x] get keys of the stripe session related to customer details => use "metadata" field
+[x] create new incomplete order
+[x] assign order to user
+[] set input email to newly created stripe session
+[] assign order to non registered user
+[]

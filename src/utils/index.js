@@ -6,6 +6,7 @@ export const products = [
     title: "Steve Madden Bbrita quilted chain handle shoulder bag in taupe",
     price: 1000,
     image: "https://frempong-simple-ecommerce.s3.eu-west-2.amazonaws.com/bag-1-taupe.jpg",
+    publicImage: "https://res.cloudinary.com/frempong/image/upload/v1640759122/simple-ecommerce/bag-1-taupe.jpg",
     shortDescription: "Outfit sorted but don’t have the footwear to go with it? Steve Madden has every style of shoe to help pull your look together, whatever the occasion. Expect chunky trainers for your everyday vibe, as well as chic, strappy heeled sandals to elevate any look. In the Steve Madden at ASOS edit, browse everything from western boots to the 90s platform soles the brand helped redefine.",
     description: "Bag by Steve Madden. Can you fall for a bag? Quilted design,Chain strap Fold-over flap top, Interlocked logo detail",
     variants: [
@@ -19,6 +20,7 @@ export const products = [
     title: "Calvin Klein repeat print backpack",
     price: 1400,
     image: "https://frempong-simple-ecommerce.s3.eu-west-2.amazonaws.com/calvin-klein-black.jpg",
+    publicImage: "https://res.cloudinary.com/frempong/image/upload/v1640759122/simple-ecommerce/calvin-klein-black.jpg",
     shortDescription: "Matte faux leather Main: 75% Polyurethane, 19% Polyvinylchloride, 6% Polyester.",
     description: "Underwear authority and all-round fashion icon, Calvin Klein puts a designer stamp on clean, casual-cool staples. From shirts to waistbands, the brand’s famous CK logo serves up instant style points. Refresh your basics with jeans, T-shirts and sweatshirts, cop some fresh loungewear or fix up in tailored suit jackets, smart trousers and signature fragrances, all available in our Calvin Klein at ASOS edit. It doesn’t get better than a new pair of CK briefs, either.",
     variants: [
@@ -32,6 +34,7 @@ export const products = [
     title: "Valentino Bags Kylo holdall in black",
     price: 18500,
     image: "https://frempong-simple-ecommerce.s3.eu-west-2.amazonaws.com/valentino-bag-black.jpg",
+    publicImage: "https://res.cloudinary.com/frempong/image/upload/v1640759123/simple-ecommerce/valentino-bag-black.jpg",
     shortDescription: `
     Pack it up
     Branded design
@@ -55,6 +58,7 @@ export const products = [
     title: "Topman faux leather strap watch in black with white dial",
     price: 2800,
     image: "https://frempong-simple-ecommerce.s3.eu-west-2.amazonaws.com/watch-black.jpg",
+    publicImage: "https://res.cloudinary.com/frempong/image/upload/v1640759123/simple-ecommerce/watch-black.jpg",
     shortDescription: `Back: 100% Stainless steel, Strap: 100% Polyurethane, Face: 85% Zinc, 10% Alloy, 5% Glass.`,
     description: "Bringing you the latest in men’s fashion, Topman dresses you for every occasion in your social calendar with its range of clothing, shoes and accessories. Shop our Topman at ASOS edit and slot the brand’s signature denim and basic tees into your casualwear rotation, or opt for tailored shirts and trousers for days when jeans and a T-shirt don’t quite cut it.",
     variants: [
@@ -72,6 +76,7 @@ export const products = [
     title: "ASOS DESIGN metal round sunglasses in gunmetal with smoke lens",
     price: 1000,
     image: "https://frempong-simple-ecommerce.s3.eu-west-2.amazonaws.com/glasses-gunmetal.jpg",
+    publicImage: "https://res.cloudinary.com/frempong/image/upload/v1640759122/simple-ecommerce/glasses-gunmetal.jpg",
     shortDescription: `Good UV protection. Not for direct observation of the sun. Non-prescription sunglasses.  Not for protection against artificial light sources such as solariums.
       Not for use as eye protection against mechanical impact.
       Wipe gently with a soft cloth.
@@ -89,6 +94,7 @@ export const products = [
     title: "COLLUSION Unisex beanie in black",
     price: 599,
     image: "https://frempong-simple-ecommerce.s3.eu-west-2.amazonaws.com/hat-black.jpg",
+    publicImage: "https://res.cloudinary.com/frempong/image/upload/v1640759122/simple-ecommerce/hat-black.jpg",
     shortDescription: `Good UV protection. Not for direct observation of the sun. Non-prescription sunglasses.  Not for protection against artificial light sources such as solariums.
       Not for use as eye protection against mechanical impact.
       Wipe gently with a soft cloth.
@@ -106,6 +112,7 @@ export const products = [
     title: "Versace Jeans Couture quilted backpack in black",
     price: 21300,
     image: "https://frempong-simple-ecommerce.s3.eu-west-2.amazonaws.com/bag-black.jpg",
+    publicImage: "https://res.cloudinary.com/frempong/image/upload/v1640759122/simple-ecommerce/bag-black.jpg",
     shortDescription: `Good UV protection. Not for direct observation of the sun. Non-prescription sunglasses.  Not for protection against artificial light sources such as solariums.
       Not for use as eye protection against mechanical impact.
       Wipe gently with a soft cloth.
@@ -140,3 +147,15 @@ export const generateUniqueId = () => {
   const uidFunc = new ShortUniqueId({ length: 10 });
   return uidFunc();
 };
+
+export const generateShortProductTitle = ({ title, length }) => {
+  if (title?.length > length) {
+    return `${title.slice(0, length)}... `;
+  }
+  return title;
+};
+
+export const centsToPounds = (cents) => {
+  return Math.round(cents / 100);
+};
+

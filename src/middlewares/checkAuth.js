@@ -23,3 +23,24 @@ export const checkAuth = async (req, res, next) => {
     });
   }
 };
+
+export const isUserLoggedIn = async (req, res, next) => {
+  const token = req.cookies[keys.cookie.cookieName];
+  if (!token) {
+    // user in not logged in
+    req.user = null;
+    next();
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_TOKEN_SECRET);
+    console.log(decoded);
+    // get user if token not expired
+    const { userId } = decoded;
+    req.user = await User.findById(userId);
+    return next();
+  } catch (err) {
+    // user in not logged in
+    req.user = null;
+    next();
+  }
+};

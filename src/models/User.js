@@ -9,6 +9,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  firstName: {
+    type: String,
+    default: "",
+  },
+  lastName: {
+    type: String,
+    default: "",
+  },
   email: {
     type: String,
     required: true,
@@ -31,6 +39,11 @@ const UserSchema = new mongoose.Schema({
   emailVerificationCode: {
     type: String,
     default: "",
+  },
+  orders: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Order",
+    default: [],
   },
 });
 

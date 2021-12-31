@@ -32,6 +32,10 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  publicImage: {
+    type: String,
+    default: "",
+  },
 });
 
 // sets "createdAt" and "updatedAt" fields

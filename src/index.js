@@ -14,6 +14,7 @@ import { createSlug, generateUniqueId, products } from "./utils/index.js";
 // routes
 import authRoutes from "./routes/auth.routes.js";
 import productRoutes from "./routes/product.routes.js";
+import stripeRoutes from "./routes/stripe.routes.js";
 import { checkAuth } from "./middlewares/checkAuth.js";
 
 // env variables
@@ -44,6 +45,7 @@ mongoose.connect(process.env.MONGO_DB_URI)
     //     shortDescription: product.shortDescription,
     //     description: product.description,
     //     image: product.image,
+    //     publicImage: product.publicImage,
     //   });
     //
     //   await newProduct.save();
@@ -91,6 +93,8 @@ app.get("/", (req, res) => {
 app.use("/api/v1", authRoutes);
 // productRoutes
 app.use("/api/v1", productRoutes);
+// stripe checkout
+app.use("/api/v1", stripeRoutes);
 
 app.listen(PORT, () => {
   console.log("********App started on port", PORT);

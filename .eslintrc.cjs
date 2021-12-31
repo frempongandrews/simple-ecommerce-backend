@@ -25,5 +25,9 @@ module.exports = {
     "consistent-return": "warn",
     "arrow-body-style": "warn",
     "semi": "warn",
+    "no-multiple-empty-lines": "warn",
+    "no-unreachable": "warn",
+    "no-restricted-syntax": "warn",
+    "no-await-in-loop": "warn",
   },
 };

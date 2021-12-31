@@ -225,7 +225,7 @@ export const loginUser = async (req, res) => {
     return res.status(400).json({
       email: "Email not registered",
     });
-  } catch (err) {
+  } catch (error) {
     return res.status(400).json({
       message: "Error logging in - Please try again",
     });
