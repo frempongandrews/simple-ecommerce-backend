@@ -4,18 +4,20 @@ import Product from "../models/Product.js";
 import Order from "../models/Order.js";
 import CartItem from "../models/CartItem.js";
 import User from "../models/User.js";
+import NonRegisteredUser from "../models/NonRegisteredUser.js";
 
 const stripeAPI = stripe("sk_test_51KBPzUF0bPUvcJSl645vKyJp2pUu8Kh0Zrwbc28tjHqHUbmW1SKsqvNvBFQLfyF2aJ7TuFhv9GjB1bLYvxM0p7wK00hq4trB3V");
 
 // @param on req.body =>
 // required: firstName, lastName, email, address, country, city, postcode, cart
 export const createStripeCheckout = async (req, res) => {
+  console.log("**********createStripeCheckout ran - req.body.cart", req.body.cart);
   const cartArr = req.body?.cart || [];
-  if (cartArr.length === 0) {
-    return res.status(400).json({
-      message: "No items found",
-    });
-  }
+  // if (cartArr.length === 0) {
+  //   return res.status(400).json({
+  //     message: "No items found",
+  //   });
+  // }
   // console.log("*******cartArr", cartArr);
   // console.log("*******req.body", req.body);
   
@@ -92,7 +94,7 @@ export const createStripeCheckout = async (req, res) => {
     // console.log("********orderItems", orderItems);
     
     let newOrder;
-    // user is logged in
+    // if checkout by registered user and logged in user
     if (req.user) {
       const userIdString = String(req.user._id);
       newOrder = new Order({
@@ -105,7 +107,46 @@ export const createStripeCheckout = async (req, res) => {
       const savedNewOrder = await newOrder.save();
       // console.log("**********savedNewOrder", savedNewOrder);
       newOrder = savedNewOrder;
-      await User.findByIdAndUpdate(req.user._id, { orders: [savedNewOrder, ...req.user.orders] })
+      await User.findByIdAndUpdate(req.user._id, { orders: [savedNewOrder, ...req.user.orders] });
+    }
+    
+    // if checkout by non registered user/non logged in user
+    let nonRegisteredUser;
+    if (!req.user) {
+      // check if email has already ordered before
+      const existingNonRegisteredUser = await NonRegisteredUser.findOne({ email });
+      // if first order by this email
+      if (!existingNonRegisteredUser) {
+        nonRegisteredUser = new NonRegisteredUser({
+          email,
+        });
+        const savedNewNonRegisteredUser = await nonRegisteredUser.save();
+        newOrder = new Order({
+          isCompleted: false,
+          customerId: savedNewNonRegisteredUser._id,
+          items: [...orderItems],
+          customerDetails: `${firstName} ${lastName} - phone: ${phoneNumber || ""} - email: ${email}`,
+          shippingAddress: `${addressLine1} ${addressLine2} ${city} ${postcode} ${country}`,
+        });
+        const savedNewOrder = await newOrder.save();
+        // console.log("**********savedNewOrder", savedNewOrder);
+        newOrder = savedNewOrder;
+        nonRegisteredUser = savedNewNonRegisteredUser;
+        await NonRegisteredUser.findByIdAndUpdate(savedNewNonRegisteredUser._id, { orders: [savedNewOrder, ...savedNewNonRegisteredUser.orders] })
+      } else {
+        nonRegisteredUser = existingNonRegisteredUser;
+        newOrder = new Order({
+          isCompleted: false,
+          customerId: existingNonRegisteredUser._id,
+          items: [...orderItems],
+          customerDetails: `${firstName} ${lastName} - phone: ${phoneNumber || ""} - email: ${email}`,
+          shippingAddress: `${addressLine1} ${addressLine2} ${city} ${postcode} ${country}`,
+        });
+        const savedNewOrder = await newOrder.save();
+        // console.log("**********savedNewOrder", savedNewOrder);
+        newOrder = savedNewOrder;
+        await NonRegisteredUser.findByIdAndUpdate(existingNonRegisteredUser._id, { orders: [savedNewOrder, ...existingNonRegisteredUser.orders] })
+      }
     }
    
     // 61c99d593f01a29e670f316d
@@ -129,15 +170,17 @@ export const createStripeCheckout = async (req, res) => {
               name: cartItem.product.title,
               images: [cartItem.product.publicImage],
             },
+            // in cents
             unit_amount: cartItem.product.price,
           },
           quantity: cartItem.quantity,
         };
       }),
       customer_email: email,
+      // details about my user
       metadata: {
         info: "details related to my custom db",
-        userId: String(req.user._id),
+        userId: req.user ? String(req.user._id) : String(nonRegisteredUser._id),
         orderId: String(newOrder._id),
       },
     });
@@ -160,35 +203,27 @@ export const getStripeSessionIdInfo = async (req, res) => {
   try {
     const session = await stripeAPI.checkout.sessions.retrieve(stripeSessionId);
     console.log("***********Session - check metadata", session);
-    // console.log("***********Is user logged in", req?.user);
-    // return res.status(200).json({
-    //   session,
-    // });
-    // purchase completed by logged in user
-    if (req?.user) {
-      const { orderId } = session.metadata;
-      const { userId } = session.metadata;
-      const customer = await User.findById(userId);
-      
-      if (session.payment_status === "paid") {
-        const orderUpdated = await Order.findByIdAndUpdate(orderId, { isCompleted: true });
-        console.log("*********orderUpdated", orderUpdated);
-      }
-      const order = await Order.findById(orderId).populate({
-        path: "items",
-        model: "CartItem",
-        populate: {
-          path: "product",
-          model: "Product",
-        },
-      });
-      console.log("*********Order", order);
-      // console.log("*********Customer", customer);
-      // console.log("*********Order items", order.items);
-      return res.status(200).json({
-        order,
-      });
+    // purchase completed
+    const { orderId } = session.metadata;
+    
+    if (session.payment_status === "paid") {
+      const orderUpdated = await Order.findByIdAndUpdate(orderId, { isCompleted: true });
+      console.log("*********orderUpdated", orderUpdated);
     }
+    const order = await Order.findById(orderId).populate({
+      path: "items",
+      model: "CartItem",
+      populate: {
+        path: "product",
+        model: "Product",
+      },
+    });
+    console.log("*********Order", order);
+    // console.log("*********Customer", customer);
+    // console.log("*********Order items", order.items);
+    return res.status(200).json({
+      order,
+    });
   } catch (err) {
     return res.status(400).json({
       message: `Error getting order details`,

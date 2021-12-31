@@ -9,11 +9,9 @@ const NonRegisteredUserSchema = new mongoose.Schema({
   firstName: {
     type: String,
     default: "",
-    required: true,
   },
   lastName: {
     type: String,
-    required: true,
     default: "",
   },
   phoneNumber: {
@@ -22,22 +20,18 @@ const NonRegisteredUserSchema = new mongoose.Schema({
   },
   address: {
     type: String,
-    required: true,
     default: "",
   },
   city: {
     type: String,
-    required: true,
     default: "",
   },
   country: {
     type: String,
-    required: true,
     default: "",
   },
   postcode: {
     type: String,
-    required: true,
     default: "",
   },
   orders: {
