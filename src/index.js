@@ -63,7 +63,7 @@ const PORT = process.env.PORT || 8080;
 const app = express();
 
 // todo: add client prod url
-const corsWhitelist = ["http://localhost:3000", "http://localhost:3001"];
+const corsWhitelist = ["http://localhost:3000", process.env.DEV_CLIENT_APP_URL, process.env.PROD_CLIENT_APP_URL];
 
 const corsOptionsDelegate = function (req, callback) {
   let corsOptions;
