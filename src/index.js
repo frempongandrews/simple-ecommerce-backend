@@ -11,15 +11,19 @@ import User from "./models/User.js";
 import Product from "./models/Product.js";
 import { createSlug, generateUniqueId, products } from "./utils/index.js";
 
+// env variables
+dotenv.config();
+
+
 // routes
 import authRoutes from "./routes/auth.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import stripeRoutes from "./routes/stripe.routes.js";
 import { checkAuth } from "./middlewares/checkAuth.js";
 
-// env variables
-dotenv.config();
 console.log(process.env.NODE_ENV);
+const stripeAPIKEY = process.env.STRIPE_PRIVATE_KEY;
+console.log("**********stripeAPIKEY", stripeAPIKEY);
 // connect to db
 mongoose.connect(process.env.MONGO_DB_URI)
   .then(async () => {

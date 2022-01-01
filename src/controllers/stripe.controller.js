@@ -1,27 +1,33 @@
 import stripe from "stripe";
-import mongoose from "mongoose";
+import dotenv from "dotenv";
 import Product from "../models/Product.js";
 import Order from "../models/Order.js";
 import CartItem from "../models/CartItem.js";
 import User from "../models/User.js";
 import NonRegisteredUser from "../models/NonRegisteredUser.js";
 
-const stripeAPI = stripe("sk_test_51KBPzUF0bPUvcJSl645vKyJp2pUu8Kh0Zrwbc28tjHqHUbmW1SKsqvNvBFQLfyF2aJ7TuFhv9GjB1bLYvxM0p7wK00hq4trB3V");
+// env variables
+// for some reason STRIPE_PRIVATE_KEY in .env does not load without
+// the line below
+dotenv.config();
+
+const stripeAPIKEY = process.env.STRIPE_PRIVATE_KEY;
+// console.log("**********stripeAPIKEY in stripe controller", stripeAPIKEY);
+const stripeAPI = stripe(stripeAPIKEY);
 
 // @param on req.body =>
 // required: firstName, lastName, email, address, country, city, postcode, cart
 export const createStripeCheckout = async (req, res) => {
-  console.log("**********createStripeCheckout ran - req.body.cart", req.body.cart);
+  // console.log("**********stripeAPIKEY", stripeAPIKEY);
+  // console.log("**********createStripeCheckout ran - req.body.cart", req.body.cart);
   const cartArr = req.body?.cart || [];
-  // if (cartArr.length === 0) {
-  //   return res.status(400).json({
-  //     message: "No items found",
-  //   });
-  // }
-  // console.log("*******cartArr", cartArr);
-  // console.log("*******req.body", req.body);
+  if (cartArr.length === 0) {
+    return res.status(400).json({
+      message: "No items found",
+    });
+  }
   
-  // required: firstName, lastName, email, address, country, city, postcode
+  // @params required: firstName, lastName, email, address, country, city, postcode
   const {
     firstName,
     lastName,
@@ -72,16 +78,8 @@ export const createStripeCheckout = async (req, res) => {
       });
     }
     
-    // todo: create new incompleted order
-    // todo: add user info (address, postcode etc) only on the order not on the user
+    // add user info (address, postcode etc) only on the order not on the user
     const orderItems = [];
-    // const orderItems = cartArrWithProductDetails.map(async (cartObj) => {
-    //   const newCartItem = new CartItem({
-    //     quantity: cartObj.quantity,
-    //     product: cartObj.product,
-    //   });
-    //   return newCartItem;
-    // });
   
     for (const cartObj of cartArrWithProductDetails) {
       const newCartItem = new CartItem({
@@ -91,7 +89,6 @@ export const createStripeCheckout = async (req, res) => {
       const savedCartItem = await newCartItem.save();
       orderItems.push(savedCartItem);
     }
-    // console.log("********orderItems", orderItems);
     
     let newOrder;
     // if checkout by registered user and logged in user
@@ -148,13 +145,6 @@ export const createStripeCheckout = async (req, res) => {
         await NonRegisteredUser.findByIdAndUpdate(existingNonRegisteredUser._id, { orders: [savedNewOrder, ...existingNonRegisteredUser.orders] })
       }
     }
-   
-    // 61c99d593f01a29e670f316d
-    // console.log("**********cartArrWithProductDetails", cartArrWithProductDetails);
-    // console.log("**********orderItems", orderItems);
-    
-    // console.log("**********user", req.user);
-    // return;
     const isDev = process.env.NODE_ENV === "development";
     
     const session = await stripeAPI.checkout.sessions.create({
@@ -184,8 +174,6 @@ export const createStripeCheckout = async (req, res) => {
         orderId: String(newOrder._id),
       },
     });
-    
-    // console.log("*******stripe Session", session);
     return res.status(200).json({
       url: session.url,
     });
@@ -198,11 +186,9 @@ export const createStripeCheckout = async (req, res) => {
 
 export const getStripeSessionIdInfo = async (req, res) => {
   const stripeSessionId = req.params.id || "";
-  console.log("*******stripe SessionId", stripeSessionId);
-  
+  // console.log("*******stripe SessionId", stripeSessionId);
   try {
     const session = await stripeAPI.checkout.sessions.retrieve(stripeSessionId);
-    console.log("***********Session - check metadata", session);
     // purchase completed
     const { orderId } = session.metadata;
     
@@ -210,17 +196,15 @@ export const getStripeSessionIdInfo = async (req, res) => {
       const orderUpdated = await Order.findByIdAndUpdate(orderId, { isCompleted: true });
       console.log("*********orderUpdated", orderUpdated);
     }
-    const order = await Order.findById(orderId).populate({
-      path: "items",
-      model: "CartItem",
-      populate: {
-        path: "product",
-        model: "Product",
-      },
-    });
-    console.log("*********Order", order);
-    // console.log("*********Customer", customer);
-    // console.log("*********Order items", order.items);
+    const order = await Order.findById(orderId)
+      .populate({
+        path: "items",
+        model: "CartItem",
+        populate: {
+          path: "product",
+          model: "Product",
+        },
+      });
     return res.status(200).json({
       order,
     });

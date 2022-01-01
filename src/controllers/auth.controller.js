@@ -232,7 +232,8 @@ export const loginUser = async (req, res) => {
   }
 };
 
-export const logoutUser = (req, res) => {
+export const logoutUser = async (req, res) => {
+  req.user = null;
   res.clearCookie(keys.cookie.cookieName);
   return res.json({
     message: "Successful logout",

@@ -29,5 +29,6 @@ module.exports = {
     "no-unreachable": "warn",
     "no-restricted-syntax": "warn",
     "no-await-in-loop": "warn",
+    "import/first": "warn",
   },
 };

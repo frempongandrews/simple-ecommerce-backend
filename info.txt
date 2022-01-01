@@ -29,6 +29,6 @@ todo: test order
 [x] get keys of the stripe session related to customer details => use "metadata" field
 [x] create new incomplete order
 [x] assign order to user
-[] set input email to newly created stripe session
-[] assign order to non registered user
-[]
+[x] set input email to newly created stripe session
+[x] assign order to non registered user
+[] send confirmation email upon checkout success
