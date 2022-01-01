@@ -208,7 +208,7 @@ export const loginUser = async (req, res) => {
         // check if verified email
         if (existingUser.isVerified) {
           const jwtToken = existingUser.generateJWT();
-          res.cookie(keys.cookie.cookieName, jwtToken, { httpOnly: true, maxAge: keys.cookie.cookieMaxAge });
+          res.cookie(keys.cookie.cookieName, jwtToken, { httpOnly: true, maxAge: keys.cookie.cookieMaxAge, secure: true, sameSite: "lax" });
           return res.json({
             message: "Successfully logged in",
             user: existingUser.getUserSummary(),
@@ -233,7 +233,6 @@ export const loginUser = async (req, res) => {
 };
 
 export const logoutUser = async (req, res) => {
-  req.user = null;
   res.clearCookie(keys.cookie.cookieName);
   return res.json({
     message: "Successful logout",

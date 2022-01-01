@@ -7,7 +7,7 @@ import {
   getCurrentUser,
   verifyRegisteredUser,
 } from "../controllers/auth.controller.js";
-import { checkAuth } from "../middlewares/checkAuth.js";
+import { isUserLoggedIn } from "../middlewares/checkAuth.js";
 
 const router = express.Router();
 
@@ -24,7 +24,7 @@ router.post("/email-verification-code", sendEmailVerificationCode);
 router.post("/login", loginUser);
 
 // logout user
-router.post("/logout", checkAuth, logoutUser);
+router.post("/logout", isUserLoggedIn, logoutUser);
 
 // return user only if verified
 // current-user
