@@ -208,7 +208,8 @@ export const loginUser = async (req, res) => {
         // check if verified email
         if (existingUser.isVerified) {
           const jwtToken = existingUser.generateJWT();
-          res.cookie(keys.cookie.cookieName, jwtToken, { httpOnly: true, maxAge: keys.cookie.cookieMaxAge, secure: true, sameSite: "lax" });
+          const isDev = process.env.NODE_ENV === "development";
+          res.cookie(keys.cookie.cookieName, jwtToken, { domain: isDev? process.env.DEV_CLIENT_APP_URL : process.env.PROD_CLIENT_APP_URL ,httpOnly: true, maxAge: keys.cookie.cookieMaxAge, secure: true, sameSite: "lax" });
           return res.json({
             message: "Successfully logged in",
             user: existingUser.getUserSummary(),
