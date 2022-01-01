@@ -19,8 +19,6 @@ Other:
 - in utils.auth.js => change emails accordingly. If using yahoo mail, can create a password to
 for nodemailer transporter in yahoo mail security settings.
 
-
-todo: test order
 [x] create NonRegisteredUser model
 [x] create order model
 [x] check if checkout is created by logged in user or not

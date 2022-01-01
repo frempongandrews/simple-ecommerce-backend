@@ -49,7 +49,7 @@ export const registerUser = async (req, res) => {
   
   sendEmailUponRegistration({ to: email })
     .then(async (emailRes) => {
-      console.log("*********EmailRes", emailRes);
+      // console.log("*********EmailRes", emailRes);
       if (emailRes.messageId) {
         const { verificationCode } = emailRes;
         // create user
@@ -72,7 +72,7 @@ export const registerUser = async (req, res) => {
       });
     })
     .catch((err) => {
-      console.log("*******Error registering user");
+      // console.log("*******Error registering user");
       return res.status(400).json({
         message: `${err.message}`,
       });
@@ -80,7 +80,7 @@ export const registerUser = async (req, res) => {
 };
 
 export const verifyRegisteredUser = async (req, res) => {
-  console.log("*******Req.body", req.body);
+  // console.log("*******Req.body", req.body);
   let { email, verificationCode } = req.body;
   email = email.trim();
   verificationCode = verificationCode.trim();
@@ -163,14 +163,14 @@ export const sendEmailVerificationCode = async (req, res) => {
           message: `Error while sending email to ${email} - Please check if email is valid`,
         });
       } catch (error) {
-        console.log("*******Error sending verification code");
+        // console.log("*******Error sending verification code");
         return res.status(400).json({
           message: `${error.message}`,
         });
       }
     }
   } catch (err) {
-    console.log("*******Error getting user while trying to send verification code");
+    // console.log("*******Error getting user while trying to send verification code");
     return res.status(400).json({
       message: `${err.message}`,
     });
@@ -178,7 +178,7 @@ export const sendEmailVerificationCode = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-  console.log("******loginUser - Req.body", req.body);
+  // console.log("******loginUser - Req.body", req.body);
   let { email, password } = req.body;
   email = email.toLowerCase().trim();
   password = password.trim();
@@ -242,7 +242,7 @@ export const logoutUser = async (req, res) => {
 
 export const getCurrentUser = async (req, res) => {
   const token = req.cookies[keys.cookie.cookieName];
-  console.log("*******Token", token);
+  // console.log("*******Token", token);
   if (!token) {
     return res.status(200).json({
       user: null,

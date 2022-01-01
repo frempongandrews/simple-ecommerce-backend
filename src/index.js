@@ -21,9 +21,9 @@ import productRoutes from "./routes/product.routes.js";
 import stripeRoutes from "./routes/stripe.routes.js";
 import { checkAuth } from "./middlewares/checkAuth.js";
 
-console.log(process.env.NODE_ENV);
+// console.log(process.env.NODE_ENV);
 const stripeAPIKEY = process.env.STRIPE_PRIVATE_KEY;
-console.log("**********stripeAPIKEY", stripeAPIKEY);
+// console.log("**********stripeAPIKEY", stripeAPIKEY);
 // connect to db
 mongoose.connect(process.env.MONGO_DB_URI)
   .then(async () => {
@@ -59,7 +59,7 @@ mongoose.connect(process.env.MONGO_DB_URI)
     console.error("*********Error db", err);
   });
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 const app = express();
 
 // todo: add client prod url
@@ -86,7 +86,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 // routes
-
 app.get("/", (req, res) => {
   res.send({
     success: true,

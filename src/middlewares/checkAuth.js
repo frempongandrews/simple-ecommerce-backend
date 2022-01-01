@@ -11,7 +11,7 @@ export const checkAuth = async (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_TOKEN_SECRET);
-    console.log(decoded);
+    // console.log(decoded);
     // get user if token not expired
     const { userId } = decoded;
     req.user = await User.findById(userId);
@@ -27,7 +27,7 @@ export const checkAuth = async (req, res, next) => {
 export const isUserLoggedIn = async (req, res, next) => {
   const token = req.cookies[keys.cookie.cookieName];
   if (!token) {
-    console.log("********isUserLoggedIn token", token);
+    // console.log("********isUserLoggedIn token", token);
     // user in not logged in
     req.user = null;
     next();
@@ -35,7 +35,7 @@ export const isUserLoggedIn = async (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_TOKEN_SECRET);
-    console.log(decoded);
+    // console.log(decoded);
     // get user if token not expired
     const { userId } = decoded;
     req.user = await User.findById(userId);
