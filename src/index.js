@@ -56,7 +56,7 @@ mongoose.connect(process.env.MONGO_DB_URI)
 const PORT = process.env.PORT || 8080;
 const app = express();
 
-const corsWhitelist = ["http://localhost:3000", process.env.DEV_CLIENT_APP_URL, process.env.PROD_CLIENT_APP_URL];
+const corsWhitelist = ["http://localhost:3000", process.env.DEV_CLIENT_APP_URL, process.env.DEV_CLIENT_APP_DOMAIN, process.env.PROD_CLIENT_APP_URL, process.env.PROD_CLIENT_APP_DOMAIN];
 
 const corsOptionsDelegate = function (req, callback) {
   let corsOptions;
