@@ -214,6 +214,7 @@ export const loginUser = async (req, res) => {
             httpOnly: process.env.NODE_ENV !== "development",
             maxAge: keys.cookie.cookieMaxAge,
             secure: process.env.NODE_ENV !== "development",
+            domain: "vercel.app",
           });
           return res.json({
             message: "Successfully logged in",
