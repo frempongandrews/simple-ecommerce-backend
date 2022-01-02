@@ -245,7 +245,7 @@ export const logoutUser = async (req, res) => {
     httpOnly: process.env.NODE_ENV !== "development",
     // set maxAge to past
     maxAge: 0,
-    secure: process.env.NODE_ENV !== "development",
+    secure: false,
     // domain: "vercel.app",
     sameSite: "none",
   });
