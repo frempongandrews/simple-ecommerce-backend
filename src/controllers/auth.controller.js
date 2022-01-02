@@ -241,7 +241,15 @@ export const loginUser = async (req, res) => {
 };
 
 export const logoutUser = async (req, res) => {
-  res.clearCookie(keys.cookie.cookieName);
+  res.cookie(keys.cookie.cookieName, "", {
+    httpOnly: process.env.NODE_ENV !== "development",
+    // set maxAge to past
+    maxAge: 0,
+    secure: process.env.NODE_ENV !== "development",
+    // domain: "vercel.app",
+    sameSite: "none",
+  });
+  // res.clearCookie(keys.cookie.cookieName);
   return res.json({
     message: "Successful logout",
   });
