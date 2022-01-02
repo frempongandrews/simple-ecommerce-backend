@@ -210,7 +210,7 @@ export const loginUser = async (req, res) => {
           const jwtToken = existingUser.generateJWT();
           const isDev = process.env.NODE_ENV === "development";
           console.log("**********Setting cookie");
-          res.cookie(keys.cookie.cookieName, jwtToken, { domain: isDev? process.env.DEV_CLIENT_APP_URL : process.env.PROD_CLIENT_APP_URL, httpOnly: true, maxAge: keys.cookie.cookieMaxAge, secure: true });
+          res.cookie(keys.cookie.cookieName, jwtToken, { domain: isDev? process.env.DEV_CLIENT_APP_URL : process.env.PROD_CLIENT_APP_URL, httpOnly: true, maxAge: keys.cookie.cookieMaxAge, sameSite: "none", secure: true });
           return res.json({
             message: "Successfully logged in",
             user: existingUser.getUserSummary(),
