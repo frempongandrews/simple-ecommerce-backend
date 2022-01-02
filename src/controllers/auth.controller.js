@@ -213,7 +213,8 @@ export const loginUser = async (req, res) => {
           res.cookie(keys.cookie.cookieName, jwtToken, {
             httpOnly: process.env.NODE_ENV !== "development",
             maxAge: keys.cookie.cookieMaxAge,
-            secure: false,
+            // secure must be true
+            secure: true,
             // domain: "vercel.app",
             sameSite: "none",
           });
@@ -245,7 +246,8 @@ export const logoutUser = async (req, res) => {
     httpOnly: process.env.NODE_ENV !== "development",
     // set maxAge to past
     maxAge: 0,
-    secure: process.env.NODE_ENV !== "development",
+    // secure must be true
+    secure: true,
     // domain: "vercel.app",
     sameSite: "none",
   });
