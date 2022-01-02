@@ -209,12 +209,13 @@ export const loginUser = async (req, res) => {
         if (existingUser.isVerified) {
           const jwtToken = existingUser.generateJWT();
           const isDev = process.env.NODE_ENV === "development";
-          console.log("**********Setting cookie", keys.cookie.cookieName + " - " + jwtToken );
+          console.log("**********Setting cookie", `${keys.cookie.cookieName} - ${jwtToken} `);
           res.cookie(keys.cookie.cookieName, jwtToken, {
             httpOnly: process.env.NODE_ENV !== "development",
             maxAge: keys.cookie.cookieMaxAge,
             // secure: process.env.NODE_ENV !== "development",
             // domain: "vercel.app",
+            sameSite: "none",
           });
           return res.json({
             message: "Successfully logged in",
