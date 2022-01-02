@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import cors from "cors";
+import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import slugify from "slugify";
 import ShortUniqueId from "short-unique-id";
@@ -81,8 +82,12 @@ app.use(cors(corsOptionsDelegate));
 app.use(cookieParser());
 // csrf
 
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(morgan("dev"));
 
 // routes
