@@ -213,7 +213,7 @@ export const loginUser = async (req, res) => {
           res.cookie(keys.cookie.cookieName, jwtToken, {
             httpOnly: process.env.NODE_ENV !== "development",
             maxAge: keys.cookie.cookieMaxAge,
-            secure: process.env.NODE_ENV !== "development",
+            // secure: process.env.NODE_ENV !== "development",
             domain: "vercel.app",
           });
           return res.json({
