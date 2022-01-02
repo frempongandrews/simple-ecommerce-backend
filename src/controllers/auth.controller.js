@@ -211,7 +211,7 @@ export const loginUser = async (req, res) => {
           const isDev = process.env.NODE_ENV === "development";
           console.log("**********Setting cookie", `${keys.cookie.cookieName} - ${jwtToken} `);
           res.cookie(keys.cookie.cookieName, jwtToken, {
-            httpOnly: process.env.NODE_ENV !== "development",
+            httpOnly: false,
             maxAge: keys.cookie.cookieMaxAge,
             // secure must be true
             secure: true,
