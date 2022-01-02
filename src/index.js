@@ -3,14 +3,7 @@ import mongoose from "mongoose";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import cors from "cors";
-import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import slugify from "slugify";
-import ShortUniqueId from "short-unique-id";
-import nodemailer from "nodemailer";
-import User from "./models/User.js";
-import Product from "./models/Product.js";
-import { createSlug, generateUniqueId, products } from "./utils/index.js";
 
 // env variables
 dotenv.config();
@@ -63,7 +56,6 @@ mongoose.connect(process.env.MONGO_DB_URI)
 const PORT = process.env.PORT || 8080;
 const app = express();
 
-// todo: add client prod url
 const corsWhitelist = ["http://localhost:3000", process.env.DEV_CLIENT_APP_URL, process.env.PROD_CLIENT_APP_URL];
 
 const corsOptionsDelegate = function (req, callback) {
@@ -78,6 +70,12 @@ const corsOptionsDelegate = function (req, callback) {
 };
 
 // middlewares
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,UPDATE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept");
+  next();
+});
 app.use(cors(corsOptionsDelegate));
 app.use(cookieParser());
 // csrf
@@ -85,9 +83,6 @@ app.use(cookieParser());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
 app.use(morgan("dev"));
 
 // routes
