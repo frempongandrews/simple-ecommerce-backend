@@ -42,7 +42,7 @@ export const sendEmailUponRegistration = async ({
       from: "frempongandrews@yahoo.com",
       to,
       // Subject line
-      subject: subject || "Hello ✔",
+      subject: subject || "Hello ✔ ",
       // plain text body
       text:
         text ||
