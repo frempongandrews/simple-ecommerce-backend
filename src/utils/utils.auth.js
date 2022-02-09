@@ -2,9 +2,13 @@ import bcrypt from "bcryptjs";
 import randomstring from "randomstring";
 import nodemailer from "nodemailer";
 
-export const hashPassword = (plainPassword) => bcrypt.hashSync(plainPassword, 10);
+export const hashPassword = (plainPassword) => {
+  return bcrypt.hashSync(plainPassword, 10);
+};
 
-export const generateVerificationCode = () => randomstring.generate({ length: 7, readable: true });
+export const generateVerificationCode = () => {
+  return randomstring.generate({ length: 7, readable: true });
+};
 
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
@@ -13,16 +17,23 @@ const transporter = nodemailer.createTransport({
   secure: true, // true for 465, false for other ports
   auth: {
     user: "frempongandrews@yahoo.com",
-    pass: "rnpdhtcromsgzuiz",
+    pass: process.env.EMAIL_APP_PASSWORD,
   },
 });
 
 // default is to send email on register user
 export const sendEmailUponRegistration = async ({
-  to, subject, text, html, code,
+  to,
+  subject,
+  text,
+  html,
+  code,
 }) => {
   try {
-    const clientAppUrl = process.env.NODE_ENV === "development" ? process.env.DEV_CLIENT_APP_URL : process.env.PROD_CLIENT_APP_URL;
+    const clientAppUrl =
+      process.env.NODE_ENV === "development"
+        ? process.env.DEV_CLIENT_APP_URL
+        : process.env.PROD_CLIENT_APP_URL;
     const verificationCode = code || generateVerificationCode();
     const clientAppVerificationEmailLink = `${clientAppUrl}/verify-email?code=${verificationCode}&email=${to}`;
     // send mail with defined transport object
@@ -33,32 +44,39 @@ export const sendEmailUponRegistration = async ({
       // Subject line
       subject: subject || "Hello ✔",
       // plain text body
-      text: text || `
+      text:
+        text ||
+        `
         Welcome to app - Please use this code to verify your email at the following link
         Code: ${verificationCode}
         verify email
       `,
       // html body
-      html: html || `
+      html:
+        html ||
+        `
         <p>Welcome to app - Please use this code to verify your email at the following link</p>
         <span>Code: <b>${verificationCode}</b></span>
         <a href=${clientAppVerificationEmailLink}>verify email</a>
       `,
     });
-    console.log("Message sent: %s", info.messageId);
+    console.log("***Message sent: %s", info.messageId);
     return {
       ...info,
       verificationCode,
     };
   } catch (err) {
-    console.log("Error sending email", err.message);
+    console.log("***Error sending email", err.message);
     return err;
   }
 };
 
 export const sendVerificationCode = async ({ to, verificationCode }) => {
   try {
-    const clientAppUrl = process.env.NODE_ENV === "development" ? process.env.DEV_CLIENT_APP_URL : process.env.PROD_CLIENT_APP_URL;
+    const clientAppUrl =
+      process.env.NODE_ENV === "development"
+        ? process.env.DEV_CLIENT_APP_URL
+        : process.env.PROD_CLIENT_APP_URL;
     const clientAppVerificationEmailLink = `${clientAppUrl}/verify-email`;
     // send mail with defined transport object
     const info = await transporter.sendMail({
@@ -80,12 +98,12 @@ export const sendVerificationCode = async ({ to, verificationCode }) => {
         <a href=${clientAppVerificationEmailLink}>verify email</a>
       `,
     });
-    console.log("Message sent: %s", info.messageId);
+    console.log("***Message sent: %s", info.messageId);
     return {
       ...info,
     };
   } catch (err) {
-    console.log("Error sending email", err.message);
+    console.log("***Error sending email", err.message);
     return err;
   }
 };
